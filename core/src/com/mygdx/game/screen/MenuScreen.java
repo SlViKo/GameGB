@@ -9,12 +9,14 @@ import com.mygdx.game.base.BaseScreen;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.sprites.Background;
+import com.mygdx.game.sprites.Logo;
 
 
 public class MenuScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
+    private Logo logo;
     private Vector2 pos;
 
     @Override
@@ -26,6 +28,13 @@ public class MenuScreen extends BaseScreen {
         } catch (GameException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        }
+
+        bg = new Texture("badlogic.jpg");
+        try {
+            logo = new Logo(bg);
+        } catch (GameException e) {
+            e.printStackTrace();
         }
         pos = new Vector2();
     }
@@ -45,16 +54,19 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void resize(Rect worldBounds) {
+
         background.resize(worldBounds);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        logo.touchDown(touch, pointer, button);
         pos.set(touch);
         return false;
     }
 
     private void update(float delta) {
+        logo.update(delta);
     }
 
     private void draw() {
@@ -62,6 +74,7 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+        logo.draw(batch);
         batch.end();
     }
 
