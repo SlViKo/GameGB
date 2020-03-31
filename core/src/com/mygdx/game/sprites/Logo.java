@@ -11,19 +11,18 @@ import com.mygdx.game.math.Rect;
 public class Logo extends Sprite {
 
 
-    private static final float V_LEN = 0.01f;
+    private static final float V_LEN = 0.02f;
 
-    private Vector2 pos;
     private Vector2 tmp;
     private Vector2 v;
     private Vector2 touch;
 
     public Logo(Texture texture) throws GameException {
         super(new TextureRegion(texture));
-        pos = new Vector2(0, 0);
-        touch = new Vector2(0, 0);
+        touch = new Vector2();
         v = new Vector2();
         tmp = new Vector2();
+        angle = 50;
 
     }
 
@@ -39,19 +38,16 @@ public class Logo extends Sprite {
        }
     }
 
-    @Override
-    public void draw(SpriteBatch batch) {
-        batch.draw(regions[0], pos.x, pos.y, 0.2f, 0.2f);
-    }
 
     @Override
     public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
+        setHeightProportion(0.3f);
     }
+
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        this.touch.set(touch);
+        this.touch = touch;
         v.set(touch.cpy().sub(pos)).setLength(V_LEN);
         return false;
     }

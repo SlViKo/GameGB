@@ -15,53 +15,42 @@ import com.mygdx.game.sprites.Logo;
 public class MenuScreen extends BaseScreen {
 
     private Texture bg;
+    private Texture badLogic;
     private Background background;
     private Logo logo;
-    private Vector2 pos;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
-        try {
-            background = new Background(bg);
-        } catch (GameException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        badLogic = new Texture("badlogic.jpg");
+        initSprites();
 
-        bg = new Texture("badlogic.jpg");
-        try {
-            logo = new Logo(bg);
-        } catch (GameException e) {
-            e.printStackTrace();
-        }
-        pos = new Vector2();
     }
 
     @Override
     public void render(float delta) {
         update(delta);
         draw();
-    }
+     }
 
     @Override
     public void dispose() {
         batch.dispose();
         bg.dispose();
+        badLogic.dispose();
         super.dispose();
     }
 
     @Override
     public void resize(Rect worldBounds) {
-
         background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         logo.touchDown(touch, pointer, button);
-        pos.set(touch);
         return false;
     }
 
@@ -76,6 +65,15 @@ public class MenuScreen extends BaseScreen {
         background.draw(batch);
         logo.draw(batch);
         batch.end();
+    }
+
+    private void initSprites() {
+        try {
+            background = new Background(bg);
+            logo = new Logo(badLogic);
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
