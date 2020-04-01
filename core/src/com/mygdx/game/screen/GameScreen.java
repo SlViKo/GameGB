@@ -9,6 +9,7 @@ import com.mygdx.game.base.BaseScreen;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.sprites.Background;
+import com.mygdx.game.sprites.ShipMain;
 import com.mygdx.game.sprites.Star;
 
 public class GameScreen extends BaseScreen {
@@ -21,8 +22,9 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
 
 
-    private Star[] stars;
 
+    private Star[] stars;
+    private ShipMain shipMain;
 
     @Override
     public void show() {
@@ -45,6 +47,7 @@ public class GameScreen extends BaseScreen {
         for (Star star: stars) {
             star.resize(worldBounds);
         }
+        shipMain.resize(worldBounds);
     }
 
     @Override
@@ -56,6 +59,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
+        shipMain.keyDown(keycode);
         return super.keyDown(keycode);
     }
 
@@ -66,6 +70,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        shipMain.touchDown(touch, pointer, button);
         return super.touchDown(touch, pointer, button);
     }
 
@@ -88,6 +93,7 @@ public class GameScreen extends BaseScreen {
         for (Star star: stars) {
             star.draw(batch);
         }
+        shipMain.draw(batch);
         batch.end();
     }
 
@@ -99,6 +105,7 @@ public class GameScreen extends BaseScreen {
             for (int i = 0; i < STAR_COUNT; i++) {
                 stars[i] = new Star(atlas);
             }
+            shipMain = new ShipMain(atlas);
         } catch (GameException e) {
             throw new RuntimeException(e);
         }
