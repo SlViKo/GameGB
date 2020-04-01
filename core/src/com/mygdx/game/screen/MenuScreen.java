@@ -9,52 +9,53 @@ import com.mygdx.game.base.BaseScreen;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.sprites.Background;
+import com.mygdx.game.sprites.Logo;
 
 
 public class MenuScreen extends BaseScreen {
 
     private Texture bg;
+    private Texture badLogic;
     private Background background;
-    private Vector2 pos;
+    private Logo logo;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
-        try {
-            background = new Background(bg);
-        } catch (GameException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        pos = new Vector2();
+        badLogic = new Texture("badlogic.jpg");
+        initSprites();
+
     }
 
     @Override
     public void render(float delta) {
         update(delta);
         draw();
-    }
+     }
 
     @Override
     public void dispose() {
         batch.dispose();
         bg.dispose();
+        badLogic.dispose();
         super.dispose();
     }
 
     @Override
     public void resize(Rect worldBounds) {
         background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        pos.set(touch);
+        logo.touchDown(touch, pointer, button);
         return false;
     }
 
     private void update(float delta) {
+        logo.update(delta);
     }
 
     private void draw() {
@@ -62,7 +63,17 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+        logo.draw(batch);
         batch.end();
+    }
+
+    private void initSprites() {
+        try {
+            background = new Background(bg);
+            logo = new Logo(badLogic);
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
