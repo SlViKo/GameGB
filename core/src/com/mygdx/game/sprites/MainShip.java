@@ -1,109 +1,45 @@
 package com.mygdx.game.sprites;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.base.Sprite;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
-import com.mygdx.game.pool.BulletPool;
 
-public class MainShip extends Sprite {
+public class ShipMain extends Sprite {
 
-    private final float STEP_SHIP = 0.5f;
-    private final float HIGHT_SHIP = 0.15f;
-    private final float BOTTOM_MARGIN = 0.02f;
-    private static final int INVALID_POINTER = -1;
-
+    private final int LEFT_KEY = 21;
+    private final int RIGHT_KEY = 22;
+    private final float STEP_SHIP = 0.04f;
+    private final float HIGHT_SHIP = 0.1f;
+    
+    
+    
     private Rect worldBounds;
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private Vector2 bulletV;
-
-    private Vector2 v0;
     private Vector2 v;
 
-    private boolean pressedLeft;
-    private boolean pressedRight;
 
-    private int leftPointer = INVALID_POINTER;
-    private int rightPointer = INVALID_POINTER;
-
-    private float animateInterval = 0.05f;
-    private float animateTimer;
-
-    Sound sound;
-
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) throws GameException {
-        super(atlas.findRegion("main_ship"), 1, 2, 2);
-        v0 = new Vector2(STEP_SHIP, 0);
-        v = new Vector2();
-        bulletV = new Vector2(0, 0.5f);
-        bulletRegion = atlas.findRegion("bulletMainShip");
-        this.bulletPool = bulletPool;
-        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+    public ShipMain(TextureAtlas atlas) throws GameException {
+        super(atlas.findRegion("main_ship"));
+        this.regions[0] = new TextureRegion(regions[0], 0, 0, regions[0].getRegionWidth() / 2, regions[0].getRegionHeight());
+        v = new Vector2(STEP_SHIP, 0);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
         setHeightProportion(HIGHT_SHIP);
-        setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
+        setBottom(worldBounds.getBottom() + 0.02f);
+        super.resize(worldBounds);
     }
-
-    @Override
-    public void update(float delta) {
-        pos.mulAdd(v, delta);
-        if (getLeft() < worldBounds.getLeft()) {
-            setLeft(worldBounds.getLeft());
-            stop();
-        }
-        if (getRight() > worldBounds.getRight()) {
-            setRight(worldBounds.getRight());
-            stop();
-        }
-        shootAuto(delta);
-    }
-
-
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (touch.x > worldBounds.pos.x) {
-            if(leftPointer != INVALID_POINTER) {
-                return false;
-            }
-            leftPointer = pointer;
+        if (touch.x > 0) {
             moveShipRight();
         } else {
-            if(rightPointer != INVALID_POINTER) {
-                return false;
-            }
-            rightPointer = pointer;
             moveShipLeft();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(Vector2 touch, int pointer, int button) {
-        if(pointer == leftPointer) {
-            leftPointer = INVALID_POINTER;
-            if(rightPointer != INVALID_POINTER) {
-                moveShipRight();
-            } else {
-                stop();
-            }
-        } else if (pointer == rightPointer) {
-            rightPointer = INVALID_POINTER;
-            if(leftPointer !=INVALID_POINTER) {
-                moveShipLeft();
-            } else {
-                stop();
-            }
         }
         return false;
     }
@@ -112,76 +48,31 @@ public class MainShip extends Sprite {
     public boolean keyDown(int keycode) {
 
         switch (keycode) {
-            case Input.Keys.A:
-            case Input.Keys.LEFT:
-                pressedLeft = true;
+            case LEFT_KEY:
                 moveShipLeft();
                 break;
-            case Input.Keys.D:
-            case Input.Keys.RIGHT:
-                pressedRight = true;
+            case RIGHT_KEY:
                 moveShipRight();
                 break;
-            case Input.Keys.UP:
-                shoot();
         }
         return false;
     }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        switch (keycode) {
-            case Input.Keys.A:
-            case Input.Keys.LEFT:
-                pressedLeft = false;
-                if (pressedRight) {
-                    moveShipRight();
-                } else {
-                    stop();
-                }
-                break;
-            case Input.Keys.D:
-            case Input.Keys.RIGHT:
-                pressedRight = false;
-                if (pressedLeft) {
-                    moveShipLeft();
-                } else {
-                    stop();
-                }
-
-                break;
+    private void moveShipRight() {
+        if ((worldBounds.getRight() - getRight()) < v.x) {
+            setRight(worldBounds.getRight());
+        } else {
+            pos.add(v);
         }
-        return false;
     }
 
-    public void dispose() {
-        sound.dispose();
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1 );
-        sound.play();
-    }
-
-    private void shootAuto(float delta) {
-            animateTimer += delta;
-            if(animateTimer >=animateInterval) {
-                animateTimer = 0;
-                shoot();
-            }
-    }
-
-        private void moveShipRight() {
-        v.set(v0);
-    }
 
 
     private void moveShipLeft() {
-        v.set(v0).rotate(180);
-    }
-
-    private void stop() {
-        v.setZero();
+        if ((getLeft() - worldBounds.getLeft()) < v.x) {
+            setLeft(worldBounds.getLeft());
+        } else {
+            pos.sub(v);
+        }
     }
 }
