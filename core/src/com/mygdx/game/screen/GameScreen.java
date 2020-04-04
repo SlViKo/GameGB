@@ -10,8 +10,10 @@ import com.mygdx.game.base.BaseScreen;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
+import com.mygdx.game.pool.EnemyPool;
 import com.mygdx.game.sprites.Background;
 import com.mygdx.game.sprites.Bullet;
+import com.mygdx.game.sprites.EnemyShip;
 import com.mygdx.game.sprites.MainShip;
 import com.mygdx.game.sprites.Star;
 
@@ -26,13 +28,14 @@ public class GameScreen extends BaseScreen {
 
     private Star[] stars;
     private BulletPool bulletPool;
+    private EnemyPool enemyPool;
     private MainShip shipMain;
+    private EnemyShip enemyShip;
 
     Music music;
 
-
-
-
+    private float animateInterval = 0.3f;
+    private float animateTimer = 0.3f;
 
     @Override
     public void show() {
@@ -41,6 +44,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         bulletPool = new BulletPool();
+        enemyPool = new EnemyPool();
         initSprites();
     }
 
@@ -66,6 +70,7 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        enemyPool.dispose();
         music.dispose();
         shipMain.dispose();
         super.dispose();
@@ -102,10 +107,20 @@ public class GameScreen extends BaseScreen {
         }
         shipMain.update(delta);
         bulletPool.updateActiveSprites(delta);
+        animateTimer += delta;
+        if (animateTimer >= animateInterval) {
+            animateTimer = 0;
+            enemyShip = enemyPool.obtain();
+            enemyShip.set(0.3f, 0);
+
+        }
+        enemyPool.updateActiveSprites(delta);
+
     }
 
     public void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
+        enemyPool.freeAllDestroyedActiveObjects();
     }
 
     private void draw() {
@@ -118,6 +133,7 @@ public class GameScreen extends BaseScreen {
         }
         shipMain.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 

@@ -30,7 +30,10 @@ public class MenuScreen extends BaseScreen {
     private Star[] stars;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
+
     Music music;
+
+
 
     public MenuScreen(Game game) {
         this.game = game;
