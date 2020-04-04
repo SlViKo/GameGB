@@ -28,6 +28,10 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
     private MainShip shipMain;
 
+    Music music;
+
+
+
 
 
     @Override
@@ -35,6 +39,7 @@ public class GameScreen extends BaseScreen {
         super.show();
         bg = new Texture("textures/bg.png");
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         bulletPool = new BulletPool();
         initSprites();
     }
@@ -61,6 +66,8 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        music.dispose();
+        shipMain.dispose();
         super.dispose();
 
     }
@@ -123,6 +130,8 @@ public class GameScreen extends BaseScreen {
                 stars[i] = new Star(atlas);
             }
             shipMain = new MainShip(atlas, bulletPool);
+            music.play();
+            music.setLooping(true);
         } catch (GameException e) {
             throw new RuntimeException(e);
         }
