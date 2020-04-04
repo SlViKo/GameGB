@@ -32,6 +32,11 @@ public class MainShip extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
+    private float animateInterval = 0.3f;
+    private float animateTimer;
+
+    Sound sound;
+
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) throws GameException {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         v0 = new Vector2(STEP_SHIP, 0);
@@ -39,6 +44,7 @@ public class MainShip extends Sprite {
         bulletV = new Vector2(0, 0.5f);
         bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
+        sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
     }
 
     @Override
@@ -59,6 +65,7 @@ public class MainShip extends Sprite {
             setRight(worldBounds.getRight());
             stop();
         }
+        shootAuto(delta);
     }
 
 
@@ -147,11 +154,23 @@ public class MainShip extends Sprite {
         return false;
     }
 
+    public void dispose() {
+        sound.dispose();
+    }
+
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1 );
+        sound.play(0.3f);
     }
 
+    private void shootAuto(float delta) {
+        animateTimer += delta;
+        if(animateTimer >=animateInterval) {
+            animateTimer = 0;
+            shoot();
+        }
+    }
 
     private void moveShipRight() {
         v.set(v0);
