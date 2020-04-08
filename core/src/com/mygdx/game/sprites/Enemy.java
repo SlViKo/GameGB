@@ -9,20 +9,35 @@ import com.mygdx.game.pool.BulletPool;
 
 public class Enemy extends Ship {
 
+   private Vector2 vSpeedAbroad;
+
     public Enemy(BulletPool bulletPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
+        isAutoShoot = false;
+        vSpeedAbroad = new Vector2(0, -0.2f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
+      if(getTop() <= worldBounds.getTop()) {
+           isAutoShoot =true;
+           v.set(v0);
+       }
         if(getBottom() < worldBounds.getBottom()) {
             destroy();
         }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        isAutoShoot = false;
+        v.set(vSpeedAbroad);
     }
 
     public void set(
@@ -47,7 +62,7 @@ public class Enemy extends Ship {
         this.reloadTimer = reloadInterval;
         this.shootSound = shootSound;
         this.hp = hp;
-        this.v.set(v0);
+        this.v.set(vSpeedAbroad);
         setHeightProportion(height);
     }
 }

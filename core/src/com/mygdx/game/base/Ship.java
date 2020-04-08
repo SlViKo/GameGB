@@ -19,6 +19,7 @@ public abstract class Ship extends Sprite {
     protected int damage;
     protected Sound shootSound;
     protected int hp;
+    protected boolean isAutoShoot;
 
     protected Vector2 v0;
     protected Vector2 v;
@@ -37,7 +38,7 @@ public abstract class Ship extends Sprite {
     public void update(float delta) {
         pos.mulAdd(v, delta);
         reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
+        if (reloadTimer >= reloadInterval && isAutoShoot) {
             reloadTimer = 0f;
             shoot();
         }
