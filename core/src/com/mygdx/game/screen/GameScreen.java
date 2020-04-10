@@ -18,6 +18,7 @@ import com.mygdx.game.sprites.Bullet;
 import com.mygdx.game.sprites.Enemy;
 import com.mygdx.game.sprites.GameOver;
 import com.mygdx.game.sprites.MainShip;
+import com.mygdx.game.sprites.ButtonNewGame;
 import com.mygdx.game.sprites.Star;
 import com.mygdx.game.utils.EnemyEmitter;
 
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class GameScreen extends BaseScreen {
 
-    private enum State {PLAYING, PAUSE, GAME_OVER}
+    public enum State {PLAYING, PAUSE, GAME_OVER}
 
 
     private static final int STAR_COUNT = 64;
@@ -35,6 +36,7 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
 
     private Star[] stars;
+
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
     private ExplosionPool explosionPool;
@@ -43,6 +45,7 @@ public class GameScreen extends BaseScreen {
 
     private MainShip shipMain;
     private GameOver gameOver;
+    private ButtonNewGame buttonNewGame;
 
 
     private Music music;
@@ -86,6 +89,7 @@ public class GameScreen extends BaseScreen {
         }
         shipMain.resize(worldBounds);
         gameOver.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
     }
 
     @Override
@@ -124,6 +128,7 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             shipMain.touchDown(touch, pointer, button);
         }
+        buttonNewGame.touchDown(touch, pointer, button);
         return false;
     }
 
@@ -132,7 +137,12 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             shipMain.touchUp(touch, pointer, button);
         }
+        buttonNewGame.touchUp(touch, pointer, button);
         return false;
+    }
+
+    public void setStatePlay() {
+        state = State.PLAYING;
     }
 
     private void update(float delta) {
@@ -212,6 +222,7 @@ public class GameScreen extends BaseScreen {
                 break;
             case GAME_OVER:
                 gameOver.draw(batch);
+                buttonNewGame.draw(batch);
                 break;
         }
         explosionPool.drawActiveSprites(batch);
@@ -228,6 +239,7 @@ public class GameScreen extends BaseScreen {
             }
             shipMain = new MainShip(atlas, bulletPool, explosionPool, laserSound);
             gameOver = new GameOver(atlas);
+            buttonNewGame = new ButtonNewGame(atlas, this, bulletPool, enemyPool, shipMain);
             music.play();
             music.setLooping(true);
         } catch (GameException e) {
