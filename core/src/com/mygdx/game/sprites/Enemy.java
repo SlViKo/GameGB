@@ -6,29 +6,31 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.base.Ship;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
+import com.mygdx.game.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
-   private Vector2 vSpeedAbroad;
+    private final Vector2 descentV;
 
-    public Enemy(BulletPool bulletPool, Rect worldBounds) {
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.worldBounds = worldBounds;
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
         isAutoShoot = false;
-        vSpeedAbroad = new Vector2(0, -0.2f);
+        descentV = new Vector2(0, -0.2f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-      if(getTop() <= worldBounds.getTop()) {
-           isAutoShoot =true;
-           v.set(v0);
-       }
-        if(getBottom() < worldBounds.getBottom()) {
+        if (getTop() <= worldBounds.getTop()) {
+            isAutoShoot = true;
+            v.set(v0);
+        }
+        if (getBottom() < worldBounds.getBottom()) {
             destroy();
         }
     }
@@ -37,7 +39,7 @@ public class Enemy extends Ship {
     public void destroy() {
         super.destroy();
         isAutoShoot = false;
-        v.set(vSpeedAbroad);
+        v.set(descentV);
     }
 
     public void set(
@@ -62,7 +64,14 @@ public class Enemy extends Ship {
         this.reloadTimer = reloadInterval;
         this.shootSound = shootSound;
         this.hp = hp;
-        this.v.set(vSpeedAbroad);
+        this.v.set(descentV);
         setHeightProportion(height);
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y);
     }
 }
