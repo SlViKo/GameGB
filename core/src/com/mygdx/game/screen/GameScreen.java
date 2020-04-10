@@ -26,7 +26,7 @@ import java.util.List;
 
 public class GameScreen extends BaseScreen {
 
-    public enum State {PLAYING, PAUSE, GAME_OVER}
+    private enum State {PLAYING, PAUSE, GAME_OVER}
 
 
     private static final int STAR_COUNT = 64;
