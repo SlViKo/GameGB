@@ -1,13 +1,10 @@
 package com.mygdx.game.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.base.Ship;
-import com.mygdx.game.base.Sprite;
 import com.mygdx.game.exception.GameException;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
@@ -15,7 +12,7 @@ import com.mygdx.game.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
-    private static final int HP = 10;
+    private static final int HP = 100;
     private final float HIGHT_SHIP = 0.15f;
     private final float BOTTOM_MARGIN = 0.02f;
     private static final int INVALID_POINTER = -1;
@@ -69,7 +66,7 @@ public class MainShip extends Ship {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (touch.x > worldBounds.pos.x) {
+        if (touch.x < worldBounds.pos.x) {
             if(leftPointer != INVALID_POINTER) {
                 return false;
             }

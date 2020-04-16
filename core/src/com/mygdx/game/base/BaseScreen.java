@@ -22,6 +22,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     private Vector2 touch;
 
+
     @Override
     public void show() {
         System.out.println("show");

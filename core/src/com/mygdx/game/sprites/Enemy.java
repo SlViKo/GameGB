@@ -10,7 +10,9 @@ import com.mygdx.game.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
+
     private final Vector2 descentV;
+
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
@@ -27,6 +29,7 @@ public class Enemy extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+
         bulletPos.set(pos.x, pos.y - getHalfHeight());
 
         if (getTop() <= worldBounds.getTop()) {
