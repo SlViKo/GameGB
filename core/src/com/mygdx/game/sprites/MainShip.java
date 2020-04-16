@@ -156,6 +156,18 @@ public class MainShip extends Ship {
                 || bullet.getTop() < getBottom());
     }
 
+    public void newGame() {
+        flushDestroy();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        reloadTimer = INVALID_POINTER;
+        hp = HP;
+        pos.x = 0;
+        stop();
+    }
+
+
     private void moveShipRight() {
         v.set(v0);
     }

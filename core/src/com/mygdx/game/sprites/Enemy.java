@@ -19,6 +19,7 @@ public class Enemy extends Ship {
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
+        bulletPos = new Vector2();
         isAutoShoot = false;
         descentV = new Vector2(0, -0.2f);
     }
@@ -26,6 +27,8 @@ public class Enemy extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+        bulletPos.set(pos.x, pos.y - getHalfHeight());
+
         if (getTop() <= worldBounds.getTop()) {
             isAutoShoot = true;
             v.set(v0);
