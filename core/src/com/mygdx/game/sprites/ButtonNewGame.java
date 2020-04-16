@@ -11,18 +11,14 @@ import com.mygdx.game.screen.GameScreen;
 public class ButtonNewGame extends ScaledButton {
 
 
-    private EnemyPool enemyPool;
     private GameScreen gameScreen;
-    private BulletPool bulletPool;
     private MainShip shipMain;
 
 
 
-    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen, BulletPool bulletPool, EnemyPool enemyPool, MainShip shipMain) throws GameException {
+    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen, MainShip shipMain) throws GameException {
         super(atlas.findRegion("button_new_game"));
         this.gameScreen = gameScreen;
-        this.bulletPool = bulletPool;
-        this.enemyPool = enemyPool;
         this.shipMain = shipMain;
 
     }
@@ -30,12 +26,8 @@ public class ButtonNewGame extends ScaledButton {
 
     @Override
     public void action() {
-        bulletPool.clearPoolObject();
-        enemyPool.clearPoolObject();
         shipMain.newGame();
-        gameScreen.setStatePlay();
-        System.out.println("fasdf");
-
+        gameScreen.startNewGAme();
     }
 
     @Override

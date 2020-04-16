@@ -141,8 +141,10 @@ public class GameScreen extends BaseScreen {
         return false;
     }
 
-    public void setStatePlay() {
+    public void startNewGAme() {
         state = State.PLAYING;
+        bulletPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
     }
 
     private void update(float delta) {
@@ -239,7 +241,7 @@ public class GameScreen extends BaseScreen {
             }
             shipMain = new MainShip(atlas, bulletPool, explosionPool, laserSound);
             gameOver = new GameOver(atlas);
-            buttonNewGame = new ButtonNewGame(atlas, this, bulletPool, enemyPool, shipMain);
+            buttonNewGame = new ButtonNewGame(atlas, this, shipMain);
             music.play();
             music.setLooping(true);
         } catch (GameException e) {
