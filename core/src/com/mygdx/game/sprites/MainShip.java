@@ -67,33 +67,33 @@ public class MainShip extends Ship {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         if (touch.x < worldBounds.pos.x) {
-            if(leftPointer != INVALID_POINTER) {
+            if (leftPointer != INVALID_POINTER) {
                 return false;
             }
             leftPointer = pointer;
-            moveShipRight();
+            moveShipLeft();
         } else {
-            if(rightPointer != INVALID_POINTER) {
+            if (rightPointer != INVALID_POINTER) {
                 return false;
             }
             rightPointer = pointer;
-            moveShipLeft();
+            moveShipRight();
         }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        if(pointer == leftPointer) {
+        if (pointer == leftPointer) {
             leftPointer = INVALID_POINTER;
-            if(rightPointer != INVALID_POINTER) {
+            if (rightPointer != INVALID_POINTER) {
                 moveShipRight();
             } else {
                 stop();
             }
         } else if (pointer == rightPointer) {
             rightPointer = INVALID_POINTER;
-            if(leftPointer !=INVALID_POINTER) {
+            if (leftPointer != INVALID_POINTER) {
                 moveShipLeft();
             } else {
                 stop();

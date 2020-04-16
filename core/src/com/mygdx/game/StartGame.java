@@ -1,3 +1,10 @@
+/**
+ *
+ * Игра Space shooter для GeekBrains
+ *
+ * @author SlViKo(Кобозев Вячеслав)
+ * @version date 16/04/2020
+ */
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
